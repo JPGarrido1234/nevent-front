@@ -1,0 +1,129 @@
+<p-messages></p-messages>
+
+<div class="fondo_fijo">
+  <div class="fondo_login">
+    <div class="flex justify-content-center transparencia">
+      <div class="card">
+        <div class="flex flex-column card-container">
+          <div *ngIf="!emailSent">
+            <span class="title_login"
+              >Estás a punto de disfrutar de una experiencia única</span
+            >
+            <form class="form_clave" [formGroup]="loginForm">
+              <div class="control">
+                <input
+                  id="email"
+                  type="text"
+                  aria-describedby="email-help"
+                  pInputText
+                  name="title"
+                  placeholder=""
+                  formControlName="email"
+                  autocomplete="email"
+                  class="w-full mb-3"
+                  [disabled]="showPassword"
+                />
+                <label for="title">Correo electrónico</label>
+              </div>
+              <div class="field control" *ngIf="showPassword">
+                <p-password
+                  id="pw1"
+                  name="clave"
+                  formControlName="password"
+                  class="w-full"
+                  [feedback]="false"
+                  [toggleMask]="true"
+                ></p-password>
+                <label for="clave">Contraseña</label>
+              </div>
+              <div class="field" *ngIf="showOtp">
+                <p-inputMask
+                  mask="999-999"
+                  formControlName="otp"
+                  placeholder="999-999"
+                ></p-inputMask>
+              </div>
+              <div *ngIf="showPasswordError" class="mb-3">
+                <label class="error">La contraseña no es correcta</label>
+              </div>
+              <div
+                class="field box_btn_continuar"
+                *ngIf="showPassword || showOtp"
+              >
+                <button
+                  *ngIf="updateLoading === false; else updateBlockedButton"
+                  pButton
+                  pRipple
+                  [disabled]="
+                    (!this.loginForm.get('password')?.value ||
+                      this.loginForm.get('password')?.value === '') &&
+                    (!this.loginForm.get('otp')?.value ||
+                      this.loginForm.get('otp')?.value === '')
+                  "
+                  label="Continuar"
+                  class="w-full btn_continuar azul"
+                  (click)="requestLogin()"
+                ></button>
+                <ng-template #updateBlockedButton>
+                  <button
+                    pButton
+                    [disabled]="true"
+                    icon="pi pi-spin pi-spinner"
+                    iconPos="right"
+                    type="button"
+                    label="Continuar"
+                    class="w-full btn_continuar azul"
+                  ></button>
+                </ng-template>
+                <div *ngIf="showPasswordError">
+                  <button
+                    pButton
+                    pRipple
+                    [disabled]="
+                      !this.loginForm.get('password')?.value ||
+                      this.loginForm.get('password')?.value === ''
+                    "
+                    label="¿Olvidaste tu contraseña? Restablecer"
+                    class="w-full p-button-text"
+                    (click)="resetPassword()"
+                  ></button>
+                </div>
+              </div>
+              <div *ngIf="!showPassword && !showOtp" class="box_btn_continuar">
+                <button
+                  *ngIf="updateLoading === false; else updateBlockedButton"
+                  pButton
+                  pRipple
+                  [disabled]="!loginForm.dirty || !loginForm.valid"
+                  label="Continuar"
+                  class="w-full btn_continuar azul"
+                  (click)="requestLogin()"
+                ></button>
+                <ng-template #updateBlockedButton>
+                  <button
+                    pButton
+                    [disabled]="true"
+                    icon="pi pi-spin pi-spinner"
+                    iconPos="right"
+                    type="button"
+                    label="Continuar"
+                    class="w-full btn_continuar azul"
+                  ></button>
+                </ng-template>
+              </div>
+              <button
+                *ngIf="showOtp"
+                pButton
+                pRipple
+                [disabled]="!loginForm.dirty || !loginForm.valid || delayResend"
+                label="¿No has recibido el correo? Volver a enviar."
+                class="w-full p-button-text"
+                (click)="requestLogin()"
+              ></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
